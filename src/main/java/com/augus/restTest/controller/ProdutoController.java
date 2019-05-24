@@ -2,6 +2,9 @@ package com.augus.restTest.controller;
 
 import com.augus.restTest.domain.Produto;
 import com.augus.restTest.persistence.service.ProdutoService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -13,47 +16,56 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/produtos")
+@Api(value = "produtos", tags = {"produtos"})
 public class ProdutoController {
-	private final ProdutoService produtoService;
+    private final ProdutoService produtoService;
 
-	@Autowired
-	public ProdutoController(ProdutoService service) {
-		this.produtoService = service;
-	}
+    @Autowired
+    public ProdutoController(ProdutoService service) {
+        this.produtoService = service;
+    }
 
-	@GetMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	@ResponseBody
-	public List<Produto> buscarTodos() {
-		return produtoService.buscarTodos();
-	}
+    @ApiOperation(value = "Lista de produtos", response = List.class)
+    @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public List<Produto> buscarTodos() {
+        return produtoService.buscarTodos();
+    }
 
-	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	@ResponseBody
-	public Produto buscarPorId(@PathVariable String id) {
-		return produtoService.buscarPorId(Long.parseLong(id));
-	}
+    @ApiOperation(value = "Buscar produto por ID", response = Produto.class)
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public Produto buscarPorId(@ApiParam(value = "ID do produto")
+                               @PathVariable String id) {
+        return produtoService.buscarPorId(Long.parseLong(id));
+    }
 
-	@PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
-			produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	@ResponseBody
-	public Produto salvar(@RequestBody Produto produto) {
-		produtoService.salvar(produto);
-		return produto;
-	}
+    @ApiOperation(value = "Cadastrar produto", response = Produto.class)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public Produto salvar(@RequestBody Produto produto) {
+        produtoService.salvar(produto);
+        return produto;
+    }
 
-	@PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
-			produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	@ResponseBody
-	public Produto editar(@PathVariable String id, @RequestBody Produto produto) {
-		if (Long.parseLong(id) != produto.getId())
-			throw new ResponseStatusException(HttpStatus.CONFLICT, "Código do objeto difere da requisição");
-		produtoService.editar(produto);
-		return produto;
-	}
+    @ApiOperation(value = "Editar produto", response = Produto.class)
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public Produto editar(@ApiParam(value = "ID do produto")
+                          @PathVariable String id, @RequestBody Produto produto) {
+        if (Long.parseLong(id) != produto.getId())
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Código do objeto difere da requisição");
+        produtoService.editar(produto);
+        return produto;
+    }
 
-	@DeleteMapping(value = "/{id}")
-	@ResponseBody
-	public void excluir(@PathVariable String id) {
-		produtoService.excluir(Long.parseLong(id));
-	}
+    @ApiOperation(value = "Excluir produto", response = void.class)
+    @DeleteMapping(value = "/{id}")
+    @ResponseBody
+    public void excluir(@ApiParam(value = "ID do produto")
+                        @PathVariable String id) {
+        produtoService.excluir(Long.parseLong(id));
+    }
 }

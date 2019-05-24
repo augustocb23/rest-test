@@ -1,5 +1,5 @@
 # Rest Test
-API Java [Spring](https://spring.io/) com base de dados [SQLite](http://sqlite.org/).
+API Java [Spring](https://spring.io/) com base de dados [SQLite](http://sqlite.org/)
 
 ## Instruções
 
