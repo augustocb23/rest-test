@@ -1,6 +1,7 @@
 package com.augus.restTest.controller;
 
 import com.augus.restTest.domain.Produto;
+import com.augus.restTest.domain.dto.LazyList;
 import com.augus.restTest.domain.helpers.BuscaLazyParams;
 import com.augus.restTest.persistence.service.ProdutoService;
 import io.swagger.annotations.Api;
@@ -29,11 +30,11 @@ public class ProdutoController {
     @ApiOperation(value = "Lista de produtos", response = List.class)
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public List<Produto> buscarTodos(@RequestParam String filter,
-                                     @RequestParam String sortOrder,
-                                     @RequestParam String sortColumn,
-                                     @RequestParam String pageNumber,
-                                     @RequestParam String pageSize) {
+    public LazyList<Produto> buscarTodos(@RequestParam String filter,
+                                         @RequestParam String sortOrder,
+                                         @RequestParam String sortColumn,
+                                         @RequestParam String pageNumber,
+                                         @RequestParam String pageSize) {
         BuscaLazyParams params;
         try {
             params = new BuscaLazyParams(filter, sortOrder,sortColumn, pageNumber, pageSize);

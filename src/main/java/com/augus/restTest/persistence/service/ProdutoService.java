@@ -1,6 +1,7 @@
 package com.augus.restTest.persistence.service;
 
 import com.augus.restTest.domain.Produto;
+import com.augus.restTest.domain.dto.LazyList;
 import com.augus.restTest.domain.helpers.BuscaLazyParams;
 
 import java.util.List;
@@ -16,5 +17,5 @@ public interface ProdutoService {
 
     List<Produto> buscarTodos();
 
-    List<Produto> buscarLazy(BuscaLazyParams params);
+    LazyList<Produto> buscarLazy(BuscaLazyParams params);
 }

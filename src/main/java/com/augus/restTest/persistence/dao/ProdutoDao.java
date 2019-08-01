@@ -1,6 +1,7 @@
 package com.augus.restTest.persistence.dao;
 
 import com.augus.restTest.domain.Produto;
+import com.augus.restTest.domain.dto.LazyList;
 import com.augus.restTest.domain.helpers.BuscaLazyParams;
 
 import javax.persistence.TypedQuery;
@@ -18,5 +19,5 @@ public interface ProdutoDao {
 
 	List<Produto> findAll();
 
-	List<Produto> findPage(BuscaLazyParams params);
+	LazyList<Produto> findPage(BuscaLazyParams params);
 }

@@ -1,6 +1,7 @@
 package com.augus.restTest.persistence.dao;
 
 import com.augus.restTest.domain.Produto;
+import com.augus.restTest.domain.dto.LazyList;
 import com.augus.restTest.domain.helpers.BuscaLazyParams;
 import com.augus.restTest.domain.helpers.SortOrder;
 import org.springframework.stereotype.Repository;
@@ -10,12 +11,11 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
-import java.util.List;
 
 @Repository
 public class ProdutoDaoImpl extends AbstractDao<Produto, Long> implements ProdutoDao {
     @Override
-    public List<Produto> findPage(BuscaLazyParams params) {
+    public LazyList<Produto> findPage(BuscaLazyParams params) {
         CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<Produto> criteriaQuery = builder.createQuery(Produto.class);
         Root<Produto> root = criteriaQuery.from(Produto.class);
@@ -34,6 +34,9 @@ public class ProdutoDaoImpl extends AbstractDao<Produto, Long> implements Produt
         query.setMaxResults(params.getPageSize());
         query.setFirstResult(params.getPageNumber() * params.getPageSize());
 
-        return query.getResultList();
+        //busca o total de itens
+        int length = createQuery().getResultList().toArray().length;
+
+        return new LazyList<>(query.getResultList(), length);
     }
 }
