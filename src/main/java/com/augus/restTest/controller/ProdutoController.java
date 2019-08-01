@@ -1,6 +1,7 @@
 package com.augus.restTest.controller;
 
 import com.augus.restTest.domain.Produto;
+import com.augus.restTest.domain.helpers.BuscaLazyParams;
 import com.augus.restTest.persistence.service.ProdutoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,8 +29,18 @@ public class ProdutoController {
     @ApiOperation(value = "Lista de produtos", response = List.class)
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public List<Produto> buscarTodos() {
-        return produtoService.buscarTodos();
+    public List<Produto> buscarTodos(@RequestParam String filter,
+                                     @RequestParam String sortOrder,
+                                     @RequestParam String sortColumn,
+                                     @RequestParam String pageNumber,
+                                     @RequestParam String pageSize) {
+        BuscaLazyParams params;
+        try {
+            params = new BuscaLazyParams(filter, sortOrder,sortColumn, pageNumber, pageSize);
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parâmetros inválidos: " + e.getMessage());
+        }
+        return produtoService.buscarLazy(params);
     }
 
     @ApiOperation(value = "Buscar produto por ID", response = Produto.class)
